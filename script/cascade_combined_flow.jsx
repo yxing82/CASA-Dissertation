@@ -1,3 +1,8 @@
+// In terminal we need to:
+// 1. cd my-dashboard
+// 2. npm run dev
+// 3. cmd-click the link of `http://localhost:5173/`
+
 import { useState, useMemo, useRef, useEffect } from "react";
 
 // ── DATA ──────────────────────────────────────────────────────────
