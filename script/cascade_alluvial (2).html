@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cascading Displacement in London — Three-Column Alluvial</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafaf7;--card:#fff;--border:#e5e5e2;--t1:#111;--t2:#333;--t3:#666;--t4:#999;--t5:#ccc;
+  --blue:#2563eb;--cyan:#0891b2;--violet:#7c3aed;--slate:#64748b;--red:#dc2626;
+  --orange:#ea580c;--emerald:#059669;
+}
+body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--bg);color:var(--t2);
+  -webkit-font-smoothing:antialiased}
+.app{max-width:1120px;margin:0 auto;padding:24px 20px 40px}
+h1{font-family:'DM Serif Display',Georgia,serif;font-size:26px;font-weight:400;color:var(--t1);line-height:1.2}
+.subtitle{font-size:13px;color:var(--t3);margin:6px 0 0;line-height:1.55;max-width:760px}
+.controls{display:flex;gap:6px;margin:16px 0}
+.controls button{padding:6px 18px;border-radius:6px;border:1.5px solid var(--border);background:transparent;
+  color:var(--t3);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.controls button.active{border-color:var(--t1);background:var(--t1);color:#fff}
+.controls button:hover:not(.active){border-color:#bbb;color:var(--t2)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 12px 4px}
+.legend-item{display:flex;align-items:center;gap:6px;cursor:pointer;transition:opacity .15s;user-select:none}
+.legend-item.dim{opacity:.3}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.legend-label{font-size:11.5px;font-weight:500;color:var(--t2)}
+.legend-count{font-size:10px;color:var(--t4)}
+.svg-wrap{position:relative;overflow-x:auto}
+.svg-wrap svg{display:block;margin:0 auto}
+.hint{text-align:center;color:var(--t4);font-size:12px;margin-top:12px}
+.detail{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:16px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.detail-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.detail-dot{width:14px;height:14px;border-radius:4px}
+.detail-title{font-size:16px;font-weight:700;color:var(--t1);font-family:'DM Serif Display',serif}
+.detail-count{font-size:13px;color:var(--t4)}
+.detail-desc{font-size:12.5px;color:var(--t3);line-height:1.55;margin-bottom:14px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.detail-col-title{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;
+  letter-spacing:.04em;margin-bottom:6px}
+.bar-row{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:11px}
+.bar-label{width:52px;color:var(--t3);font-weight:500;font-size:10px}
+.bar-track{flex:1;height:14px;background:#f0f0ed;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;min-width:3px}
+.bar-val{width:36px;text-align:right;color:var(--t3);font-weight:500}
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(490px,1fr));gap:14px}
+.decile-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.decile-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.decile-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.flow-row{display:grid;grid-template-columns:36px 1fr 56px 1fr 80px;align-items:center;gap:4px;
+  margin-bottom:3px;font-size:10px}
+.flow-bar{height:14px;border-radius:3px}
+.decile-footer{margin-top:6px;padding-top:6px;border-top:1px solid #f0f0ed;font-size:9.5px;color:var(--t4)}
+.insight-box{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 18px}
+.insight-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px;font-family:'DM Serif Display',serif}
+.insight-text{font-size:12px;color:var(--t3);line-height:1.6}
+.source{max-width:1120px;margin:20px auto 0;padding-top:12px;border-top:1px solid var(--border);
+  font-size:10px;color:var(--t4);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Cascading Displacement in London</h1>
+  <p class="subtitle">
+    Three-column alluvial showing how 983 London MSOAs flow from their <strong>IMD Rank Decile 2010</strong>
+    through a <strong>gentrification classification</strong> to their <strong>IMD Rank Decile 2019</strong>.
+    Deciles are derived from mean LSOA IMD rank aggregated to MSOA level (1 = most deprived, 10 = least deprived).
+    Census O-D data from 2011 &amp; 2021 defines cascade flows; IMD percentile change validates the classification.
+  </p>
+  <div class="controls">
+    <button id="btnAlluvial" class="active" onclick="switchView('alluvial')">Alluvial Flow</button>
+    <button id="btnBreakdown" onclick="switchView('breakdown')">Decile Breakdown</button>
+  </div>
+  <div id="viewAlluvial">
+    <div class="legend" id="legend"></div>
+    <div class="svg-wrap"><svg id="alluvialSvg"></svg></div>
+    <div id="detailPanel"></div>
+    <p class="hint" id="hintText">Hover or click a category in the middle column to see inflow / outflow breakdown</p>
+  </div>
+  <div id="viewBreakdown" style="display:none">
+    <p style="font-size:12.5px;color:var(--t3);margin:0 0 16px;line-height:1.5">
+      Aggregate cascade flows by IMD rank decile — showing inflow from wealthier areas (higher-ranked)
+      and outflow to poorer areas (lower-ranked), across both census periods.
+    </p>
+    <div class="breakdown-grid" id="breakdownGrid"></div>
+    <div class="insight-box">
+      <div class="insight-title">Reading the pattern</div>
+      <p class="insight-text">
+        Deciles 1–5 (most deprived) show net positive cascade — more people arriving from higher-ranked
+        areas than leaving to lower-ranked ones. This is the gentrification signal. Deciles 6–10 show
+        the mirror: net negative cascade, as outflows to lower-ranked areas exceed inflows from higher.
+        The symmetry pivot around Decile 5 is the clearest fingerprint of the cascading displacement
+        mechanism, persisting across both census periods.
+      </p>
+    </div>
+  </div>
+</div>
+<div class="source">
+  Data: ONS Census Origin-Destination 2011 &amp; 2021 · IMD 2010 &amp; 2019 (MHCLG) ·
+  983 London MSOAs · Deciles from mean LSOA IMD rank aggregated to MSOA (1 = most deprived, 10 = least deprived) ·
+  Classification: cascade direction (Net Cascade) × IMD rank decile shift (2010→2019)
+</div>
+
+<script>
+const D = {"lm":[[1,"Cascade Pressure",58],[1,"Emerging Gentrification",26],[1,"Strong Gentrification",15],[2,"Cascade Pressure",21],[2,"Emerging Gentrification",22],[2,"Mild Decline",32],[2,"Stable",5],[2,"Strong Gentrification",10],[2,"Transitional",8],[3,"Cascade Pressure",22],[3,"Emerging Gentrification",19],[3,"Mild Decline",30],[3,"Stable",5],[3,"Strong Decline",7],[3,"Strong Gentrification",4],[3,"Transitional",11],[4,"Cascade Pressure",18],[4,"Emerging Gentrification",12],[4,"Mild Decline",25],[4,"Stable",13],[4,"Strong Decline",15],[4,"Strong Gentrification",3],[4,"Transitional",12],[5,"Cascade Pressure",21],[5,"Emerging Gentrification",13],[5,"Mild Decline",23],[5,"Stable",14],[5,"Strong Decline",9],[5,"Strong Gentrification",1],[5,"Transitional",17],[6,"Cascade Pressure",5],[6,"Emerging Gentrification",4],[6,"Mild Decline",27],[6,"Stable",23],[6,"Strong Decline",9],[6,"Strong Gentrification",1],[6,"Transitional",30],[7,"Cascade Pressure",5],[7,"Emerging Gentrification",2],[7,"Mild Decline",30],[7,"Stable",37],[7,"Strong Decline",7],[7,"Transitional",17],[8,"Cascade Pressure",5],[8,"Emerging Gentrification",3],[8,"Mild Decline",26],[8,"Stable",42],[8,"Strong Decline",1],[8,"Transitional",21],[9,"Emerging Gentrification",1],[9,"Mild Decline",26],[9,"Stable",55],[9,"Strong Decline",1],[9,"Transitional",15],[10,"Mild Decline",17],[10,"Stable",82]],"mr":[["Cascade Pressure",1,58],["Cascade Pressure",2,21],["Cascade Pressure",3,22],["Cascade Pressure",4,18],["Cascade Pressure",5,21],["Cascade Pressure",6,5],["Cascade Pressure",7,5],["Cascade Pressure",8,5],["Emerging Gentrification",2,26],["Emerging Gentrification",3,22],["Emerging Gentrification",4,19],["Emerging Gentrification",5,12],["Emerging Gentrification",6,13],["Emerging Gentrification",7,4],["Emerging Gentrification",8,2],["Emerging Gentrification",9,3],["Emerging Gentrification",10,1],["Mild Decline",1,32],["Mild Decline",2,30],["Mild Decline",3,25],["Mild Decline",4,23],["Mild Decline",5,27],["Mild Decline",6,30],["Mild Decline",7,26],["Mild Decline",8,26],["Mild Decline",9,17],["Stable",2,5],["Stable",3,5],["Stable",4,13],["Stable",5,14],["Stable",6,23],["Stable",7,37],["Stable",8,42],["Stable",9,55],["Stable",10,82],["Strong Decline",1,9],["Strong Decline",2,16],["Strong Decline",3,7],["Strong Decline",4,8],["Strong Decline",5,7],["Strong Decline",6,1],["Strong Decline",7,1],["Strong Gentrification",3,11],["Strong Gentrification",4,7],["Strong Gentrification",5,8],["Strong Gentrification",6,5],["Strong Gentrification",7,1],["Strong Gentrification",8,2],["Transitional",3,6],["Transitional",4,10],["Transitional",5,9],["Transitional",6,22],["Transitional",7,24],["Transitional",8,21],["Transitional",9,23],["Transitional",10,16]],"cats":["Strong Gentrification","Emerging Gentrification","Cascade Pressure","Transitional","Stable","Mild Decline","Strong Decline"],"stats":[{"d":1,"n":99,"iw11":59204,"op11":0,"nc11":59204,"tm11":172066,"iw21":54253,"op21":0,"nc21":54253,"tm21":170550},{"d":2,"n":98,"iw11":51896,"op11":17647,"nc11":34249,"tm11":176695,"iw21":45147,"op21":16251,"nc21":28896,"tm21":171599},{"d":3,"n":98,"iw11":46380,"op11":26572,"nc11":19808,"tm11":177637,"iw21":40120,"op21":22718,"nc21":17402,"tm21":169987},{"d":4,"n":98,"iw11":40505,"op11":31641,"nc11":8864,"tm11":169160,"iw21":33405,"op21":27422,"nc21":5983,"tm21":159421},{"d":5,"n":98,"iw11":35660,"op11":34877,"nc11":783,"tm11":166782,"iw21":32558,"op21":28939,"nc21":3619,"tm21":166376},{"d":6,"n":99,"iw11":28957,"op11":41919,"nc11":-12962,"tm11":163845,"iw21":25623,"op21":37105,"nc21":-11482,"tm21":167808},{"d":7,"n":98,"iw11":21336,"op11":41363,"nc11":-20027,"tm11":148244,"iw21":18754,"op21":36029,"nc21":-17275,"tm21":148873},{"d":8,"n":98,"iw11":16519,"op11":40563,"nc11":-24044,"tm11":138200,"iw21":14337,"op21":37177,"nc21":-22840,"tm21":142856},{"d":9,"n":98,"iw11":8977,"op11":42183,"nc11":-33206,"tm11":126430,"iw21":8200,"op21":37669,"nc21":-29469,"tm21":132130},{"d":10,"n":99,"iw11":0,"op11":32669,"nc11":-32669,"tm11":97787,"iw21":0,"op21":29087,"nc21":-29087,"tm21":103404}],"descs":{"Strong Gentrification":"MSOAs that shifted \u22652 deciles upward with positive net cascade \u2014 strong affluent inflow coinciding with significant neighbourhood uplift.","Emerging Gentrification":"MSOAs that shifted 1 decile upward with positive net cascade \u2014 early-stage gentrification where cascade pressure translates into compositional change.","Cascade Pressure":"MSOAs with sustained positive net cascade across both periods but no decile shift \u2014 gentrification pressure without (yet) tipping the neighbourhood.","Transitional":"MSOAs with mixed signals \u2014 some cascade activity but primarily lateral moves or non-cascade-driven change.","Stable":"No decile shift and no significant cascade pressure \u2014 the neighbourhood hierarchy held across both periods.","Mild Decline":"MSOAs that shifted 1 decile downward \u2014 becoming relatively more deprived, potentially receiving displaced residents.","Strong Decline":"MSOAs that shifted \u22652 deciles downward \u2014 significant relative deprivation increase, often at the receiving end of displacement chains."},"total":983};
+
+const CAT_COLORS = {
+  'Strong Gentrification':'#1d4ed8','Emerging Gentrification':'#2563eb',
+  'Cascade Pressure':'#0891b2','Transitional':'#7c3aed',
+  'Stable':'#64748b','Mild Decline':'#ea580c','Strong Decline':'#dc2626'
+};
+
+// Colour scale: D1 (most deprived) = deep red → D10 (least deprived) = deep green
+const DECILE_COLORS = [
+  '#991b1b','#b91c1c','#dc2626','#ef4444','#f87171',
+  '#86efac','#4ade80','#22c55e','#16a34a','#15803d'
+];
+
+// Decile labels matching IMD convention
+const DECILE_LABELS = {
+  1:'Most deprived', 2:'', 3:'', 4:'', 5:'',
+  6:'', 7:'', 8:'', 9:'', 10:'Least deprived'
+};
+
+let currentView='alluvial', selectedCat=null, hoveredCat=null;
+
+function fmt(n){ return Math.abs(n)>=1000?(n/1000).toFixed(1)+'k':n.toLocaleString() }
+function fmtS(n){ return (n>0?'+':'')+fmt(n) }
+
+function switchView(v){
+  currentView=v;
+  document.getElementById('btnAlluvial').classList.toggle('active',v==='alluvial');
+  document.getElementById('btnBreakdown').classList.toggle('active',v==='breakdown');
+  document.getElementById('viewAlluvial').style.display=v==='alluvial'?'':'none';
+  document.getElementById('viewBreakdown').style.display=v==='breakdown'?'':'none';
+}
+
+// ── ALLUVIAL ─────────────────────────────────────────────────────────
+// KEY: Decile 10 (least deprived) at TOP, Decile 1 (most deprived) at BOTTOM
+// This matches the Yee (2021) figure and standard alluvial convention.
+function computeLayout(){
+  const W=Math.min(window.innerWidth-60,1080), H=700;
+  const pad={top:58,bottom:28,left:18,right:18};
+  const colW=Math.min(130,W*0.13);
+  const gap=(W-pad.left-pad.right-colW*3)/2;
+  const usableH=H-pad.top-pad.bottom;
+  const nodeGap=3;
+
+  // REVERSED order: draw from D10 (top) down to D1 (bottom)
+  const drawOrder = [10,9,8,7,6,5,4,3,2,1];
+
+  const leftTotals={};
+  for(let d=1;d<=10;d++) leftTotals[d]=D.lm.filter(f=>f[0]===d).reduce((s,f)=>s+f[2],0);
+  const total=Object.values(leftTotals).reduce((s,v)=>s+v,0);
+  const scale=(usableH-9*nodeGap)/total;
+
+  const leftNodes={};
+  let cy=pad.top;
+  for(const d of drawOrder){
+    const h=leftTotals[d]*scale;
+    leftNodes[d]={d, x:pad.left, y:cy, w:colW, h, count:leftTotals[d]};
+    cy+=h+nodeGap;
+  }
+
+  const midTotals={};
+  D.cats.forEach(c=>{ midTotals[c]=D.lm.filter(f=>f[1]===c).reduce((s,f)=>s+f[2],0) });
+  const midNodes={};
+  cy=pad.top;
+  D.cats.forEach(c=>{
+    const h=midTotals[c]*scale;
+    midNodes[c]={cat:c, x:pad.left+colW+gap, y:cy, w:colW, h, count:midTotals[c]};
+    cy+=h+nodeGap;
+  });
+
+  const rightTotals={};
+  for(let d=1;d<=10;d++) rightTotals[d]=D.mr.filter(f=>f[1]===d).reduce((s,f)=>s+f[2],0);
+  const rightNodes={};
+  cy=pad.top;
+  for(const d of drawOrder){
+    const h=rightTotals[d]*scale;
+    rightNodes[d]={d, x:pad.left+colW*2+gap*2, y:cy, w:colW, h, count:rightTotals[d]};
+    cy+=h+nodeGap;
+  }
+
+  // Left→Mid bands (iterate in draw order for proper stacking)
+  const lmBands=[];
+  const lOff={}, mLOff={};
+  drawOrder.forEach(d=>lOff[d]=0);
+  D.cats.forEach(c=>mLOff[c]=0);
+  // Sort flows by drawOrder for left, then by category order for middle
+  const lmSorted=[...D.lm].sort((a,b)=>{
+    const ai=drawOrder.indexOf(a[0]), bi=drawOrder.indexOf(b[0]);
+    if(ai!==bi) return ai-bi;
+    return D.cats.indexOf(a[1])-D.cats.indexOf(b[1]);
+  });
+  for(const [fromD,cat,count] of lmSorted){
+    const ln=leftNodes[fromD], mn=midNodes[cat];
+    if(!ln||!mn) continue;
+    const h=count*scale;
+    lmBands.push({fromD,cat,count,sx:pad.left+colW,sy:ln.y+lOff[fromD],
+      dx:mn.x, dy:mn.y+mLOff[cat], h:Math.max(h,.5)});
+    lOff[fromD]+=h; mLOff[cat]+=h;
+  }
+
+  // Mid→Right bands
+  const mrBands=[];
+  const mROff={}, rOff={};
+  D.cats.forEach(c=>mROff[c]=0);
+  drawOrder.forEach(d=>rOff[d]=0);
+  const mrSorted=[...D.mr].sort((a,b)=>{
+    const ai=D.cats.indexOf(a[0]), bi=D.cats.indexOf(b[0]);
+    if(ai!==bi) return ai-bi;
+    return drawOrder.indexOf(a[1])-drawOrder.indexOf(b[1]);
+  });
+  for(const [cat,toD,count] of mrSorted){
+    const mn=midNodes[cat], rn=rightNodes[toD];
+    if(!mn||!rn) continue;
+    const h=count*scale;
+    mrBands.push({cat,toD,count,sx:mn.x+colW,sy:mn.y+mROff[cat],
+      dx:rn.x, dy:rn.y+rOff[toD], h:Math.max(h,.5)});
+    mROff[cat]+=h; rOff[toD]+=h;
+  }
+
+  return {W,H,pad,colW,leftNodes,midNodes,rightNodes,lmBands,mrBands,drawOrder};
+}
+
+function bandPath(sx,sy,dx,dy,h){
+  const mx=(sx+dx)/2;
+  return `M${sx},${sy} C${mx},${sy} ${mx},${dy} ${dx},${dy} L${dx},${dy+h} C${mx},${dy+h} ${mx},${sy+h} ${sx},${sy+h} Z`;
+}
+
+function drawAlluvial(){
+  const L=computeLayout();
+  const svg=document.getElementById('alluvialSvg');
+  svg.setAttribute('width',L.W);
+  svg.setAttribute('height',L.H);
+  svg.setAttribute('viewBox',`0 0 ${L.W} ${L.H}`);
+  let html='';
+
+  const lCx=L.pad.left+L.colW/2;
+  const mCx=L.midNodes[D.cats[0]].x+L.colW/2;
+  const rCx=L.rightNodes[10].x+L.colW/2;
+
+  html+=`<text x="${lCx}" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#333" font-family="DM Sans">IMD Rank Decile</text>`;
+  html+=`<text x="${lCx}" y="40" text-anchor="middle" font-size="10" fill="#999" font-family="DM Sans">(2010 baseline)</text>`;
+  html+=`<text x="${mCx}" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#333" font-family="DM Sans">Classification</text>`;
+  html+=`<text x="${mCx}" y="40" text-anchor="middle" font-size="10" fill="#999" font-family="DM Sans">(cascade + IMD shift)</text>`;
+  html+=`<text x="${rCx}" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#333" font-family="DM Sans">IMD Rank Decile</text>`;
+  html+=`<text x="${rCx}" y="40" text-anchor="middle" font-size="10" fill="#999" font-family="DM Sans">(2019 outcome)</text>`;
+
+  // Scale labels on left edge — D10 at top, D1 at bottom
+  const topNode=L.leftNodes[10], botNode=L.leftNodes[1];
+  html+=`<text x="${L.pad.left-4}" y="${topNode.y+8}" text-anchor="end" font-size="8" fill="#15803d" font-weight="600" font-family="DM Sans">Least deprived ↑</text>`;
+  html+=`<text x="${L.pad.left-4}" y="${botNode.y+botNode.h-2}" text-anchor="end" font-size="8" fill="#b91c1c" font-weight="600" font-family="DM Sans">Most deprived ↓</text>`;
+
+  // LM bands
+  L.lmBands.forEach(b=>{
+    const active=selectedCat?b.cat===selectedCat:(!hoveredCat||b.cat===hoveredCat);
+    html+=`<path d="${bandPath(b.sx,b.sy,b.dx,b.dy,b.h)}" fill="${CAT_COLORS[b.cat]}"
+      opacity="${active?0.38:0.04}" class="band" data-cat="${b.cat}"
+      onmouseenter="hoverCat('${b.cat}')"/>`;
+  });
+  L.mrBands.forEach(b=>{
+    const active=selectedCat?b.cat===selectedCat:(!hoveredCat||b.cat===hoveredCat);
+    html+=`<path d="${bandPath(b.sx,b.sy,b.dx,b.dy,b.h)}" fill="${CAT_COLORS[b.cat]}"
+      opacity="${active?0.38:0.04}" class="band" data-cat="${b.cat}"
+      onmouseenter="hoverCat('${b.cat}')"/>`;
+  });
+
+  // Left nodes (D10 at top → D1 at bottom)
+  L.drawOrder.forEach(d=>{
+    const n=L.leftNodes[d]; const ci=d-1;
+    html+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${Math.max(n.h,2)}" rx="4"
+      fill="${DECILE_COLORS[ci]}" opacity="0.88"/>`;
+    if(n.h>14){
+      html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+1}" text-anchor="middle"
+        dominant-baseline="central" font-size="10" font-weight="600" fill="#fff"
+        font-family="DM Sans" style="pointer-events:none">IMD ${d} · ${n.count}</text>`;
+    }
+  });
+
+  // Mid nodes
+  D.cats.forEach(c=>{
+    const n=L.midNodes[c];
+    const active=selectedCat?n.cat===selectedCat:(!hoveredCat||n.cat===hoveredCat);
+    html+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${Math.max(n.h,2)}" rx="4"
+      fill="${CAT_COLORS[n.cat]}" opacity="${active?0.88:0.25}" class="mid-node" data-cat="${n.cat}"
+      style="cursor:pointer" onmouseenter="hoverCat('${n.cat}')" onclick="clickCat('${n.cat}')"/>`;
+    if(n.h>28){
+      const words=n.cat.split(' ');
+      if(words.length>1 && n.h>36){
+        html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2-8}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="#fff" font-family="DM Sans" style="pointer-events:none">${words[0]}</text>`;
+        html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+4}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="#fff" font-family="DM Sans" style="pointer-events:none">${words.slice(1).join(' ')}</text>`;
+        html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+17}" text-anchor="middle" dominant-baseline="central" font-size="9" fill="rgba(255,255,255,.7)" font-family="DM Sans" style="pointer-events:none">${n.count} MSOAs</text>`;
+      } else {
+        html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2-4}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="#fff" font-family="DM Sans" style="pointer-events:none">${n.cat}</text>`;
+        html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+10}" text-anchor="middle" dominant-baseline="central" font-size="9" fill="rgba(255,255,255,.7)" font-family="DM Sans" style="pointer-events:none">${n.count} MSOAs</text>`;
+      }
+    } else if(n.h>14){
+      html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+1}" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="600" fill="#fff" font-family="DM Sans" style="pointer-events:none">${n.cat} (${n.count})</text>`;
+    }
+  });
+
+  // Right nodes
+  L.drawOrder.forEach(d=>{
+    const n=L.rightNodes[d]; const ci=d-1;
+    html+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${Math.max(n.h,2)}" rx="4"
+      fill="${DECILE_COLORS[ci]}" opacity="0.88"/>`;
+    if(n.h>14){
+      html+=`<text x="${n.x+n.w/2}" y="${n.y+n.h/2+1}" text-anchor="middle"
+        dominant-baseline="central" font-size="10" font-weight="600" fill="#fff"
+        font-family="DM Sans" style="pointer-events:none">IMD ${d} · ${n.count}</text>`;
+    }
+  });
+
+  svg.innerHTML=html;
+}
+
+function hoverCat(cat){
+  if(selectedCat) return;
+  hoveredCat=cat; updateBandOpacity(); showDetail(cat);
+}
+function clearHover(){
+  if(selectedCat) return;
+  hoveredCat=null; updateBandOpacity();
+  document.getElementById('detailPanel').innerHTML='';
+  document.getElementById('hintText').style.display='';
+}
+function clickCat(cat){
+  selectedCat=selectedCat===cat?null:cat; hoveredCat=null;
+  updateBandOpacity(); updateLegend();
+  if(selectedCat){ showDetail(selectedCat); }
+  else { document.getElementById('detailPanel').innerHTML=''; document.getElementById('hintText').style.display=''; }
+}
+function updateBandOpacity(){
+  const active=selectedCat||hoveredCat;
+  document.querySelectorAll('.band').forEach(el=>{
+    el.setAttribute('opacity',!active||el.getAttribute('data-cat')===active?0.38:0.04);
+  });
+  document.querySelectorAll('.mid-node').forEach(el=>{
+    el.setAttribute('opacity',!active||el.getAttribute('data-cat')===active?0.88:0.25);
+  });
+}
+
+function showDetail(cat){
+  document.getElementById('hintText').style.display='none';
+  const total=D.lm.filter(f=>f[1]===cat).reduce((s,f)=>s+f[2],0);
+  const fromD={}; D.lm.filter(f=>f[1]===cat).forEach(f=>{fromD[f[0]]=f[2]});
+  const toD={}; D.mr.filter(f=>f[0]===cat).forEach(f=>{toD[f[1]]=f[2]});
+  let html=`
+    <div class="detail-header">
+      <div class="detail-dot" style="background:${CAT_COLORS[cat]}"></div>
+      <span class="detail-title">${cat}</span>
+      <span class="detail-count">— ${total} MSOAs (${(total/D.total*100).toFixed(1)}%)</span>
+    </div>
+    <p class="detail-desc">${D.descs[cat]||''}</p>
+    <div class="detail-grid"><div>
+      <div class="detail-col-title">← Origin: IMD Rank Decile 2010</div>`;
+  for(let d=10;d>=1;d--){
+    const v=fromD[d]||0; if(!v) continue;
+    html+=`<div class="bar-row">
+      <span class="bar-label">IMD ${d}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${v/total*100}%;background:${DECILE_COLORS[d-1]};opacity:.7"></div></div>
+      <span class="bar-val">${v}</span></div>`;
+  }
+  html+=`</div><div><div class="detail-col-title">Destination: IMD Rank Decile 2019 →</div>`;
+  for(let d=10;d>=1;d--){
+    const v=toD[d]||0; if(!v) continue;
+    html+=`<div class="bar-row">
+      <span class="bar-label">IMD ${d}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${v/total*100}%;background:${DECILE_COLORS[d-1]};opacity:.7"></div></div>
+      <span class="bar-val">${v}</span></div>`;
+  }
+  html+='</div></div>';
+  document.getElementById('detailPanel').innerHTML=html;
+}
+
+function buildLegend(){
+  let html='';
+  D.cats.forEach(c=>{
+    const n=D.lm.filter(f=>f[1]===c).reduce((s,f)=>s+f[2],0);
+    html+=`<div class="legend-item" id="leg_${c.replace(/\s/g,'_')}" onclick="clickCat('${c}')"
+      onmouseenter="hoverCat('${c}')" onmouseleave="clearHover()">
+      <div class="legend-dot" style="background:${CAT_COLORS[c]}"></div>
+      <span class="legend-label">${c}</span>
+      <span class="legend-count">(${n})</span></div>`;
+  });
+  document.getElementById('legend').innerHTML=html;
+}
+function updateLegend(){
+  D.cats.forEach(c=>{
+    const el=document.getElementById('leg_'+c.replace(/\s/g,'_'));
+    if(el) el.classList.toggle('dim',selectedCat&&selectedCat!==c);
+  });
+}
+
+// ── BREAKDOWN ────────────────────────────────────────────────────────
+function drawBreakdown(){
+  let html='';
+  // Show from D10 (least deprived) to D1 (most deprived) — top to bottom
+  const ordered=[...D.stats].reverse();
+  ordered.forEach(ds=>{
+    const maxBar=Math.max(ds.iw11,ds.op11,ds.iw21,ds.op21);
+    const barScale=180/(maxBar||1);
+    const delta=ds.nc21-ds.nc11;
+    const dcol=delta>0?'var(--blue)':delta<0?'var(--red)':'var(--t4)';
+    const depLabel=ds.d<=3?'Most deprived':ds.d<=7?'Mid-range':'Least deprived';
+    html+=`<div class="decile-card">
+      <div class="decile-head">
+        <div style="display:flex;align-items:center">
+          <div class="decile-badge" style="background:${DECILE_COLORS[ds.d-1]}">${ds.d}</div>
+          <div style="margin-left:8px">
+            <div style="font-size:13px;font-weight:700;color:var(--t1)">IMD Decile ${ds.d}</div>
+            <div style="font-size:10px;color:var(--t4)">${depLabel} · ${ds.n} MSOAs</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--t4);text-transform:uppercase;letter-spacing:.04em;text-align:right">Net Cascade Δ</div>
+          <div style="font-size:14px;font-weight:700;text-align:right;color:${dcol}">${fmtS(delta)}</div>
+        </div>
+      </div>`;
+    [{y:'2011',iw:ds.iw11,op:ds.op11,nc:ds.nc11,tm:ds.tm11},
+     {y:'2021',iw:ds.iw21,op:ds.op21,nc:ds.nc21,tm:ds.tm21}].forEach(r=>{
+      const ncCol=r.nc>=0?'var(--blue)':'var(--red)';
+      const opac=r.y==='2011'?0.75:0.4;
+      html+=`<div class="flow-row">
+        <span style="font-weight:600;color:var(--t3)">${r.y}</span>
+        <div style="display:flex;justify-content:flex-end;align-items:center;gap:4px">
+          <span style="color:var(--blue);font-size:9px;font-weight:500">${fmt(r.iw)}</span>
+          <div class="flow-bar" style="width:${r.iw*barScale}px;background:var(--blue);opacity:${opac}"></div>
+        </div>
+        <div style="text-align:center;font-size:8px;color:#bbb;text-transform:uppercase">← in | out →</div>
+        <div style="display:flex;justify-content:flex-start;align-items:center;gap:4px">
+          <div class="flow-bar" style="width:${r.op*barScale}px;background:var(--red);opacity:${opac}"></div>
+          <span style="color:var(--red);font-size:9px;font-weight:500">${fmt(r.op)}</span>
+        </div>
+        <div style="text-align:right;font-weight:600;font-size:10px;color:${ncCol}">Net: ${fmtS(r.nc)}</div>
+      </div>`;
+    });
+    html+=`<div class="decile-footer">Total migration: ${fmt(ds.tm11)} (2011) → ${fmt(ds.tm21)} (2021)</div></div>`;
+  });
+  document.getElementById('breakdownGrid').innerHTML=html;
+}
+
+function init(){
+  buildLegend(); drawAlluvial(); drawBreakdown();
+  document.getElementById('alluvialSvg').addEventListener('mouseleave',clearHover);
+  let t; window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(drawAlluvial,150)});
+}
+init();
+</script>
+</body>
+</html>
