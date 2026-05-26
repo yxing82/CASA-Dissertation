@@ -12,7 +12,7 @@ Also includes a Decile Breakdown view inspired by the Nomis census
 flow tool, showing inflow/outflow bars per decile across both periods.
 
 Requires: pandas, json
-Input:    outputs/msoa_cascade_features_20260518.csv
+Input:    outputs/msoa_cascade_features_20260522.csv
 Output:   outputs/cascade_alluvial.html
 
 Folder structure:
@@ -20,10 +20,12 @@ Folder structure:
     ├── data/
     │   └── meta data files
     ├── scripts/
-    │   └── cascade_alluvial.py          ← this file
+    │   └── cascade_alluvial_restructure_imd_corroboration.py         
     └── outputs/
-        └── msoa_cascade_features_20260518.csv
-        └── cascade_alluvial.html        ← generated
+        └── msoa_cascade_features_20260522.csv
+        └── cascade_alluvial_restructure_imd_corroboration.html        
+        └── cascade_alluvial_restructure.html    
+        └── cascade_alluvial_restructure_v2_new_palette.html    
 """
 
 from pathlib import Path
@@ -37,7 +39,7 @@ OUTPUT_DIR = ROOT_DIR / 'outputs'
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # ── 1. Load data ──────────────────────────────────────────────────────
-df = pd.read_csv(OUTPUT_DIR / 'msoa_cascade_features_20260518.csv')
+df = pd.read_csv(OUTPUT_DIR / 'msoa_cascade_features_20260522.csv')
 print(f'Loaded {len(df)} MSOAs across {df["ladnm"].nunique()} boroughs')
 
 # ── 2. Compute classifications ────────────────────────────────────────

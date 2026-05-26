@@ -20,10 +20,10 @@ Folder structure:
     ├── data/
     │   └── meta data files
     ├── scripts/
-    │   └── cascade_alluvial.py          ← this file
+    │   └── cascade_alluvial.py          
     └── outputs/
-        └── msoa_cascade_features_20260518.csv
-        └── cascade_alluvial.html        ← generated
+        └── msoa_cascade_features_20260522.csv
+        └── cascade_alluvial.html      
 """
 
 from pathlib import Path
