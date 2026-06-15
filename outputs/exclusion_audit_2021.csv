@@ -1,0 +1,8 @@
+origin_cat,london_analysis,ew_non_london,boundary_changed,scotland,n_ireland,special_code,unknown
+london_analysis,766502,307434,23258,0,0,0,23283
+ew_non_london,135081,4318963,73940,0,0,0,58783
+boundary_changed,19138,71171,15377,0,0,0,7328
+scotland,5300,24109,748,0,0,0,766
+n_ireland,0,0,0,0,0,0,0
+special_code,7451283,44348445,740298,0,0,0,506170
+unknown,18240,53296,7224,0,0,0,13870
