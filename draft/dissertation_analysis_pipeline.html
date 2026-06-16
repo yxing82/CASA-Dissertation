@@ -1,0 +1,303 @@
+
+<!-- saved from url=(0064)file:///Users/xing/Downloads/dissertation_analysis_pipeline.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .pipeline { font-family: var(--font-sans); color: var(--color-text-primary); padding: 12px 0; }
+  .stage { margin-bottom: 8px; border-left: 3px solid var(--color-border-tertiary); padding: 0 0 0 16px; }
+  .stage-header { display: flex; align-items: baseline; gap: 10px; cursor: pointer; padding: 10px 0 6px; user-select: none; }
+  .stage-num { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .stage-title { font-size: 16px; font-weight: 500; }
+  .stage-body { display: none; padding: 0 0 8px 0; }
+  .stage.open .stage-body { display: block; }
+  .stage.open .stage-header .chevron { transform: rotate(90deg); }
+  .chevron { font-size: 12px; transition: transform 0.15s; color: var(--color-text-tertiary); }
+  .sub { margin: 6px 0; padding: 8px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+  .sub-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .sub-detail { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .tech { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-tertiary); padding: 1px 5px; border-radius: 4px; }
+  .arrow-down { text-align: center; color: var(--color-text-tertiary); font-size: 18px; margin: 2px 0; }
+  .files { font-size: 12px; color: var(--color-text-tertiary); margin-top: 4px; font-style: italic; }
+  .n1 { background: var(--color-background-info); color: var(--color-text-info); }
+  .n2 { background: #E1F5EE; color: #0F6E56; }
+  .n3 { background: #FAEEDA; color: #854F0B; }
+  .n4 { background: #EEEDFE; color: #534AB7; }
+  .n5 { background: #FAECE7; color: #993C1D; }
+  .n6 { background: #FBEAF0; color: #993556; }
+  .n7 { background: #EAF3DE; color: #3B6D11; }
+  @media (prefers-color-scheme: dark) {
+    .n2 { background: #085041; color: #9FE1CB; }
+    .n3 { background: #412402; color: #FAC775; }
+    .n4 { background: #26215C; color: #CECBF6; }
+    .n5 { background: #4A1B0C; color: #F5C4B3; }
+    .n6 { background: #4B1528; color: #F4C0D1; }
+    .n7 { background: #173404; color: #C0DD97; }
+  }
+  .legend { margin-top: 12px; padding: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); font-size: 13px; }
+  .legend-title { font-weight: 500; margin-bottom: 6px; font-size: 14px; }
+  .legend-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; margin-right: 12px; margin-bottom: 2px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head><body><h2 class="sr-only">Dissertation analysis pipeline: seven stages from raw data acquisition through visualisation and reporting.</h2>
+<div class="pipeline">
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n1">Stage 1</span>
+    <span class="stage-title">Data acquisition</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">Census origin–destination migration data</div>
+      <div class="sub-detail">
+        <strong>2011:</strong> Table MF01EW — safeguarded OA-level flows from WICID (3.7M rows, 3 cols: origin OA, dest OA, persons)<br>
+        <strong>2021:</strong> Table RM097 — MSOA-level flows from NOMIS (1.49M rows, 5 cols including origin/dest MSOA codes + migrant count)
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">Index of Multiple Deprivation</div>
+      <div class="sub-detail">
+        <strong>IMD 2010:</strong> LSOA-level scores and ranks (32,482 LSOAs) — used as <em>fixed baseline hierarchy</em><br>
+        <strong>IMD 2019:</strong> LSOA-level scores, ranks, and mid-2015 population estimates (32,844 LSOAs) — used for <em>validation only</em>
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">Geographic lookups</div>
+      <div class="sub-detail">
+        ONS postcode lookup (NSPCL NOV22) for OA→MSOA mapping (232,044 unique OA–MSOA pairs)<br>
+        ONS MSOA 2011-to-2021 correspondence table (7,201 rows)
+      </div>
+    </div>
+    <div class="files">Sources: WICID, NOMIS, GOV.UK, Open Geography Portal</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n2">Stage 2</span>
+    <span class="stage-title">Spatial harmonisation &amp; data processing</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">2a. Geography harmonisation</div>
+      <div class="sub-detail">
+        <strong>2021 O-D:</strong> Map MSOA 2021 codes → 2011 codes via correspondence table. Retain only <em>unchanged 1:1 MSOAs</em> (7,080 of 7,201). Split/merged MSOAs excluded.<br>
+        <strong>2011 O-D:</strong> Map OA codes → 2011 MSOA codes via postcode lookup. No cross-year translation needed — native 2011 geography.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">2b. IMD aggregation (LSOA → MSOA)</div>
+      <div class="sub-detail">
+        Population-weighted averaging of LSOA IMD scores/ranks to 2011 MSOA boundaries.<br>
+        Weights: mid-2015 LSOA population from IMD 2019 release, applied to both 2010 and 2019 IMD.<br>
+        Rank → percentile normalisation: <span class="tech">rank / n_lsoa</span> to ensure cross-release comparability.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">2c. London scope &amp; analysis whitelist</div>
+      <div class="sub-detail">
+        Filter to 33 London local authority districts (32 boroughs + City of London).<br>
+        <strong>Analysis whitelist:</strong> 983 MSOAs with valid IMD scores for both 2010 and 2019. A flow is retained iff <em>both</em> endpoints are in the whitelist.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">2d. Endpoint classification &amp; exclusion audit</div>
+      <div class="sub-detail">
+        Every O-D code classified into mutually exclusive categories: <span class="tech">london_analysis</span>, <span class="tech">ew_non_london</span>, <span class="tech">boundary_changed</span>, <span class="tech">scotland</span>, <span class="tech">n_ireland</span>, <span class="tech">special_code</span> (−8, 999999999, OD-prefixed), <span class="tech">unknown</span>.<br>
+        Whitelist-based filtering (positive definition). Per-reason waterfall counts exported for methodology reporting.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">2e. Flow table construction</div>
+      <div class="sub-detail">
+        2011 OA flows aggregated to MSOA-to-MSOA level (<span class="tech">groupby origin_msoa × dest_msoa → sum persons</span>).<br>
+        Intra-MSOA moves (origin = destination) removed — they represent local churn, not inter-neighbourhood restructuring.<br>
+        <strong>Retained:</strong> 2011: ~5.1M migrants across ~1.37M MSOA pairs; 2021: ~1.35M flows (90.5% endpoint mapping rate).
+      </div>
+    </div>
+    <div class="files">Notebook: data_preprocess_od_drop_out_logic_rewrite_20260612.ipynb</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n3">Stage 3</span>
+    <span class="stage-title">Deprivation hierarchy &amp; flow classification</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">3a. Fixed baseline deprivation hierarchy</div>
+      <div class="sub-detail">
+        Each of 983 London MSOAs assigned a <strong>wealth decile</strong> based on IMD 2010 scores (via <span class="tech">pd.qcut(IMD_2010, 10)</span>, inverted so Decile 1 = most deprived).<br>
+        Classification is <em>fixed</em> and applied to both 2011 and 2021 flows. This separates measurement of migration restructuring from measurement of neighbourhood outcomes.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">3b. Directional flow classification</div>
+      <div class="sub-detail">
+        For each O-D flow, compare origin and destination deciles:<br>
+        <strong>Cascade flows:</strong> <span class="tech">Inflow_Wealthier</span> = migrants arriving from higher decile (less deprived) origins; <span class="tech">Outflow_Poorer</span> = migrants leaving to lower decile (more deprived) destinations<br>
+        <strong>Counter-cascade flows:</strong> <span class="tech">Outflow_Wealthier</span> = leaving to higher decile; <span class="tech">Inflow_Poorer</span> = arriving from lower decile<br>
+        <strong>Lateral flows:</strong> same-decile moves (Decile_Shift = 0) — excluded from cascade metrics but retained for total migration normalisation
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">3c. Four-flow consistency check</div>
+      <div class="sub-detail">
+        Verification: <span class="tech">Inflow_Wealthier + Inflow_Poorer + Inflow_Lateral = Total_Inflow</span> (and same for outflows).<br>
+        Zero negative lateral residuals confirms mutually exclusive and exhaustive decomposition.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n4">Stage 4</span>
+    <span class="stage-title">CFI metric construction</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">Four cascading flow index metrics (per MSOA, per census period)</div>
+      <div class="sub-detail" style="line-height:1.8">
+        <strong>Net Cascade</strong> = <span class="tech">Inflow_Wealthier − Outflow_Poorer</span> — directional balance (positive = net upward inflows)<br>
+        <strong>CFI Churn</strong> = <span class="tech">Inflow_Wealthier + Outflow_Poorer</span> — total cascade intensity regardless of direction<br>
+        <strong>CFI Rate</strong> = <span class="tech">(Inflow_W × Outflow_P) / Total_Migration</span> — normalised co-occurrence (high only when both flows elevated simultaneously)<br>
+        <strong>% Inflow Wealthier</strong> = <span class="tech">(Inflow_W / Total_Inflow) × 100</span> — compositional share of inflows from less deprived areas
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">Temporal change indicators</div>
+      <div class="sub-detail">
+        Delta metrics computed: <span class="tech">Δ = metric_21 − metric_11</span> for each CFI metric to capture restructuring dynamics across the decade.
+      </div>
+    </div>
+    <div class="files">Output: msoa_cascade_features_{date}.csv — 983 rows × 33 columns</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage open" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n5">Stage 5</span>
+    <span class="stage-title">Restructuring typology</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">Two-stage classification (from 2011 baseline thresholds)</div>
+      <div class="sub-detail">
+        <strong>Step 1 — Intensity split:</strong> CFI Churn median divides MSOAs into low-churn (→ <em>Stable</em>) and high-churn (→ proceed to Step 2).<br>
+        <strong>Step 2 — Directional split (high-churn only):</strong> Net Cascade quartiles among high-churn MSOAs:<br>
+        &nbsp;&nbsp;• Upper quartile (Q75+) → <em>Ascent-dominated</em> — strong upward inflows, socio-economic upgrading signature<br>
+        &nbsp;&nbsp;• Interquartile range → <em>Cascading circulation</em> — high churn, balanced directionality, continuous flow-through<br>
+        &nbsp;&nbsp;• Lower quartile (Q25−) → <em>Displacement-dominated</em> — strong downward outflows, displacement pressure
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">Alternative typology formulations explored in EDA</div>
+      <div class="sub-detail">
+        Temporal typologies (Emerging / Sustained / Stalled / Stable) based on period-specific median thresholds for CFI Churn, CFI Rate, and Net Cascade — cross-tabulated to assess convergence.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n6">Stage 6</span>
+    <span class="stage-title">Validation &amp; sensitivity analysis</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">6a. Primary validation outcome</div>
+      <div class="sub-detail">
+        <strong>IMD Percentile Change</strong> = <span class="tech">IMD_Pctile_2019 − IMD_Pctile_2010</span>. Positive = relative upward repositioning (became less deprived). Secondary: raw IMD score change (interpreted cautiously due to cross-release non-comparability).
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">6b. Bivariate correlation analysis</div>
+      <div class="sub-detail">
+        Pearson r between each CFI metric and IMD Percentile Change.<br>
+        Key finding: CFI Churn shows strongest correlation with percentile change (r ≈ +0.38); CFI Rate robust secondary (r ≈ +0.24). Net Cascade correlates more strongly with score change (r ≈ −0.44) but not percentile change.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">6c. Partial correlation analysis</div>
+      <div class="sub-detail">
+        Controlling for IMD 2010 baseline scores to check whether relationships persist independently of initial deprivation intensity.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">6d. Typological validation (ANOVA)</div>
+      <div class="sub-detail">
+        One-way ANOVA of mean IMD Percentile Change across the four restructuring regimes.<br>
+        CFI Churn typology produces strongest separation (F = 38.76, p &lt; 0.001). Ascent-dominated MSOAs average highest percentile gains.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">6e. IMD baseline sensitivity analysis</div>
+      <div class="sub-detail">
+        Full re-estimation of all metrics under alternative 2019 IMD classification (4 combinations: 2011/2021 OD × 2010/2019 IMD baseline).<br>
+        Tests robustness via: cross-baseline Pearson r (expected &gt; 0.80), validation concordance, decile assignment stability, borough-level CFI Rate concordance.
+      </div>
+    </div>
+    <div class="files">Notebooks: eda_cascade_imd_rank_analysis.ipynb, sensitivity_imd_baseline_20260526.ipynb</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+
+<div class="stage" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="stage-header">
+    <span class="chevron">▸</span>
+    <span class="stage-num n7">Stage 7</span>
+    <span class="stage-title">Visualisation &amp; reporting</span>
+  </div>
+  <div class="stage-body">
+    <div class="sub">
+      <div class="sub-title">Three-column alluvial diagram</div>
+      <div class="sub-detail">
+        Self-contained HTML visualisation: <strong>Wealth Decile 2010 → Restructuring Typology → Wealth Decile 2019</strong>.<br>
+        Shows how MSOAs flow from baseline deprivation position through cascade regime to outcome position. Includes decile breakdown view with inflow/outflow bars per decile for both census periods.
+      </div>
+    </div>
+    <div class="sub">
+      <div class="sub-title">EDA outputs</div>
+      <div class="sub-detail">
+        Distribution comparisons (2011 vs 2021 overlay histograms), correlation heatmaps (14×14 matrix), scatter plots with regression fits, typology comparison charts, borough-level CFI Rate analysis, partial correlation tables.
+      </div>
+    </div>
+    <div class="files">Script: cascade_alluvial_restructure_imd_corroboration.py</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-title">Key design principles</div>
+  <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">
+    <strong>Separation of measurement and outcome:</strong> CFI metrics are derived entirely from migration flow asymmetries; IMD change enters only at the validation stage, avoiding conceptual circularity.<br>
+    <strong>Fixed baseline:</strong> The 2010 IMD hierarchy is frozen across both census periods so that changes in metric values reflect genuine shifts in migration structures, not reclassification artefacts.<br>
+    <strong>Whitelist-based filtering:</strong> Retained flows are defined positively (both endpoints resolve to a London MSOA with a wealth decile), preventing unanticipated codes from leaking into the analysis.<br>
+    <strong>Unit of analysis:</strong> 983 temporally consistent MSOAs across Greater London (after excluding split/merged boundaries).
+  </div>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.stage').forEach((s,i)=>{if(i>0) s.classList.remove('open');});
+</script>
+</body></html>

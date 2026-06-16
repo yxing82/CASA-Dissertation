@@ -1,0 +1,151 @@
+<style>
+*{box-sizing:border-box}
+.arch{display:flex;flex-direction:column;gap:6px;font-family:var(--font-family-sans)}
+.file-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px 20px;background:var(--color-background-secondary)}
+.file-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.file-icon{font-size:13px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--color-text-primary-inverse)}
+.f1 .file-icon{background:#3B82F6}
+.f2 .file-icon{background:#8B5CF6}
+.f3 .file-icon{background:#EF4444}
+.f4 .file-icon{background:#F59E0B}
+.f5 .file-icon{background:#10B981}
+.file-name{font-size:14px;font-weight:500;color:var(--color-text-primary);font-family:var(--font-family-mono)}
+.file-subtitle{font-size:12px;color:var(--color-text-tertiary);margin-left:auto}
+.file-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px}
+.sections{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.sec-tag{font-size:11px;padding:3px 8px;border-radius:4px;background:var(--color-background-tertiary);color:var(--color-text-secondary)}
+.io-row{display:flex;gap:16px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)}
+.io-box{flex:1}
+.io-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.io-val{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.io-val code{font-size:11px;background:var(--color-background-tertiary);padding:1px 4px;border-radius:3px}
+.arrow-down{text-align:center;padding:2px 0;color:var(--color-text-tertiary);font-size:14px}
+.note-box{font-size:12px;color:var(--color-text-tertiary);padding:10px 16px;border-radius:var(--border-radius-md);border:0.5px dashed var(--color-border-secondary);line-height:1.6;margin-top:2px}
+</style>
+
+<div class="arch">
+
+<div class="file-card f1">
+<div class="file-head">
+<div class="file-icon">1</div>
+<div class="file-name">eda_1_metric_landscape.ipynb</div>
+<div class="file-subtitle">Phases A + B</div>
+</div>
+<div class="file-desc">
+The diagnostic notebook. Profiles all eight metric families, discovers the correlation structure, identifies redundancy, and constructs the two derived metrics. This is the notebook where you "learn what the data looks like" and make defensible metric selection decisions.
+</div>
+<div class="sections">
+<span class="sec-tag">§1 Setup & data</span>
+<span class="sec-tag">§2 Descriptive stats (cascade ∥ counter-cascade)</span>
+<span class="sec-tag">§3 Distribution overlays 2011 vs 2021</span>
+<span class="sec-tag">§4 Full correlation matrix</span>
+<span class="sec-tag">§5 Four base flows decomposition</span>
+<span class="sec-tag">§6 Decision: construct Cascade_Dominance + Cross_Decile_Share</span>
+</div>
+<div class="io-row">
+<div class="io-box"><div class="io-label">Reads</div><div class="io-val"><code>msoa_cascade_features_20260615.csv</code></div></div>
+<div class="io-box"><div class="io-label">Writes</div><div class="io-val"><code>msoa_cascade_features_enriched.csv</code><br/>= source CSV + Cascade_Dominance, Cross_Decile_Share, sign concordance flags (both years), all deltas</div></div>
+</div>
+</div>
+
+<div class="arrow-down">↓ enriched CSV is the shared interface ↓</div>
+
+<div style="display:flex;gap:6px">
+
+<div class="file-card f2" style="flex:1">
+<div class="file-head">
+<div class="file-icon">2</div>
+<div class="file-name">eda_2_hierarchy_and_divergence.ipynb</div>
+<div class="file-subtitle">Phases C + D</div>
+</div>
+<div class="file-desc">
+How the deprivation hierarchy structures everything, and where the mirror breaks. Decile profiles, temporal shifts, and deep-dive on the ~10% divergent MSOAs.
+</div>
+<div class="sections">
+<span class="sec-tag">§7 Decile profiles (all metrics)</span>
+<span class="sec-tag">§8 Derived metrics by decile</span>
+<span class="sec-tag">§9 Temporal shift (Δ) by decile</span>
+<span class="sec-tag">§10 Sign concordance analysis</span>
+<span class="sec-tag">§11 Cascade_Dominance scatter</span>
+</div>
+<div class="io-row">
+<div class="io-box"><div class="io-label">Reads</div><div class="io-val"><code>msoa_cascade_features_enriched.csv</code></div></div>
+<div class="io-box"><div class="io-label">Writes</div><div class="io-val">Figures only — no new CSV needed</div></div>
+</div>
+</div>
+
+<div class="file-card f3" style="flex:1">
+<div class="file-head">
+<div class="file-icon">3</div>
+<div class="file-name">eda_3_typology_and_validation.ipynb</div>
+<div class="file-subtitle">Phases E + F</div>
+</div>
+<div class="file-desc">
+Constructs the flow regime typology from the two derived metrics, profiles each type, and validates against IMD change. This is where the analytical contribution crystallises.
+</div>
+<div class="sections">
+<span class="sec-tag">§12 Typology scatter (Dom × Cross_Share)</span>
+<span class="sec-tag">§13 Typology profiles</span>
+<span class="sec-tag">§14 IMD validation (correlation + partial)</span>
+<span class="sec-tag">§15 Typology vs IMD_Pctile_Change</span>
+</div>
+<div class="io-row">
+<div class="io-box"><div class="io-label">Reads</div><div class="io-val"><code>msoa_cascade_features_enriched.csv</code></div></div>
+<div class="io-box"><div class="io-label">Writes</div><div class="io-val"><code>msoa_typology_labels.csv</code><br/>= msoa11cd + typology label (for downstream use)</div></div>
+</div>
+</div>
+
+</div>
+
+<div class="arrow-down">↓ typology labels feed downstream work ↓</div>
+
+<div style="display:flex;gap:6px">
+
+<div class="file-card f4" style="flex:1">
+<div class="file-head">
+<div class="file-icon">4</div>
+<div class="file-name">eda_4_geography_and_cases.ipynb</div>
+<div class="file-subtitle">Phase G</div>
+</div>
+<div class="file-desc">
+Borough-level aggregation, top/bottom MSOAs, and your supervisor's suggested case studies — selecting 2–3 representative MSOAs per typology and profiling their flow structure in detail.
+</div>
+<div class="sections">
+<span class="sec-tag">§16 Borough aggregation</span>
+<span class="sec-tag">§17 Top/bottom MSOAs</span>
+<span class="sec-tag">§18 Case study selection</span>
+<span class="sec-tag">§19 Case flow profiles</span>
+</div>
+<div class="io-row">
+<div class="io-box"><div class="io-label">Reads</div><div class="io-val"><code>msoa_cascade_features_enriched.csv</code> + <code>msoa_typology_labels.csv</code><br/>+ original OD flow data (for case study detail)</div></div>
+<div class="io-box"><div class="io-label">Writes</div><div class="io-val">Figures + summary tables</div></div>
+</div>
+</div>
+
+<div class="file-card f5" style="flex:1">
+<div class="file-head">
+<div class="file-icon">5</div>
+<div class="file-name">alluvial_visualisation_update.html</div>
+<div class="file-subtitle">Separate deliverable</div>
+</div>
+<div class="file-desc">
+Extends the existing alluvial to show cascade (cool) + counter-cascade (warm) flow bands, coloured by regime typology. Separate because it's interactive JS/HTML, not analytical Python.
+</div>
+<div class="sections">
+<span class="sec-tag">Cascade bands (teal/blue)</span>
+<span class="sec-tag">Counter-cascade bands (coral/amber)</span>
+<span class="sec-tag">Typology colouring</span>
+</div>
+<div class="io-row">
+<div class="io-box"><div class="io-label">Reads</div><div class="io-val"><code>msoa_cascade_features_enriched.csv</code> + <code>msoa_typology_labels.csv</code></div></div>
+<div class="io-box"><div class="io-label">Writes</div><div class="io-val">Self-contained interactive HTML</div></div>
+</div>
+</div>
+
+</div>
+
+<div class="note-box" style="margin-top:8px">
+<strong>Why this split works:</strong> File 1 is the only file that writes derived columns. Files 2, 3, and 4 all read the same enriched CSV independently — you can run them in any order, rework one without touching the others, and your supervisor can read each as a self-contained analytical chapter. The only sequential dependency is that File 3 writes the typology labels that File 4 needs, but File 4 is also the last to be developed.
+</div>
+
+</div>
