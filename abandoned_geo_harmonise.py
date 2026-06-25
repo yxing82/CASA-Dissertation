@@ -79,25 +79,3 @@ def export_remap_table(h, path):
             for k, v in sorted(h.remap_2021.items())]
     pd.DataFrame(rows).to_csv(path, index=False)
     return path
-
-
-def build_full_remap(lookup_id,
-                     code11_col='MSOA11CD', code21_col='MSOA21CD'):
-    """
-    England-wide 2021 MSOA code -> canonical 2011 code (every code, not just London).
-
-    Needed by the national-frame notebook: external (non-London) origins/destinations
-    must keep a *real* 2011 code so their national deprivation decile can be looked up
-    (e.g. the flow-weighted external-decile diagnostic). Merges collapse to the lowest
-    member 2011 code, exactly as in build_harmonisation, so London stays consistent.
-    """
-    lk = lookup_id[[code11_col, code21_col]].dropna().astype(str)
-    parents_per_child = lk.groupby(code21_col)[code11_col].nunique()
-    merge_children = set(parents_per_child[parents_per_child > 1].index)
-    parent_to_canon = {}
-    for ch in merge_children:
-        members = sorted(lk.loc[lk[code21_col] == ch, code11_col].unique())
-        for m in members:
-            parent_to_canon[m] = members[0]
-    return {r[code21_col]: parent_to_canon.get(r[code11_col], r[code11_col])
-            for _, r in lk.iterrows()}
