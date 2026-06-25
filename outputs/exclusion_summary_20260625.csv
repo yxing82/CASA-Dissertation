@@ -1,0 +1,11 @@
+year,reason,persons,pct_of_total
+2011,"RETAINED (London->London, pre intra-MSOA filter)",851937,12.6
+2011,excluded: ew_non_london,5242412,77.55
+2011,excluded: scotland,40446,0.6
+2011,excluded: special_code,612488,9.06
+2011,excluded: unknown,12915,0.19
+2021,"RETAINED (London->London, pre intra-MSOA filter)",843761,1.43
+2021,excluded: boundary_changed,5000444,8.48
+2021,excluded: scotland,30923,0.05
+2021,excluded: special_code,53046196,89.92
+2021,excluded: unknown,68683,0.12
