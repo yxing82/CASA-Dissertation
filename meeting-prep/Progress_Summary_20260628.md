@@ -23,7 +23,7 @@ Migration flows were scored against neighbourhood deprivation under a **three-fr
 - **Frame C — London flows plus London-touch external flows on the national ladder.** 
     - Adds the external-flow effect via a synthetic external node fixed at national D6.
 
-Each cross-boundary move is classified as cascade (inflow from wealthier / outflow to poorer) or counter-cascade. 
+Each cross-boundary move is classified as cascade (inflow from wealthier and outflow to poorer) or counter-cascade. 
 
 MSOAs are typed by the balance and intensity of deprivation-crossing flows (Cascade-led, Counter-led, Symmetric, Lateral).
 
