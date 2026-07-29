@@ -87,9 +87,33 @@ ALLUVIAL = {
 # stroke kept strong. The marker's job: (1) flag subtype presence,
 # (2) let the reader see which mechanism fill it sits on.
 #   path_effects=[pe.withStroke(linewidth=MARKER_STYLE['halo_lw'], foreground='white')]
+# MARKER_STYLE = dict(
+#     supgen=dict(s=19, facecolors='none', edgecolors=YEE['marker'], linewidths=1.4),   # was s=30, lw=1.6
+#     maingen=dict(s=26, marker='^', facecolors=YEE['marker'], edgecolors='white', linewidths=0.6),  # was s=36, lw=0.7
+#     halo_lw=2.4,                                                                       # was 3.0
+#     legend=dict(supgen_ms=5.6, supgen_mew=1.4, maingen_ms=6.6, maingen_mew=0.6),
+# )
+SUBTYPE_MARKER = '#111111'
+
 MARKER_STYLE = dict(
-    supgen=dict(s=19, facecolors='none', edgecolors=YEE['marker'], linewidths=1.4),   # was s=30, lw=1.6
-    maingen=dict(s=26, marker='^', facecolors=YEE['marker'], edgecolors='white', linewidths=0.6),  # was s=36, lw=0.7
-    halo_lw=2.4,                                                                       # was 3.0
-    legend=dict(supgen_ms=5.6, supgen_mew=1.4, maingen_ms=6.6, maingen_mew=0.6),
+    supgen=dict(
+        s=19,
+        facecolors='none',
+        edgecolors=SUBTYPE_MARKER,
+        linewidths=1.4
+    ),
+    maingen=dict(
+        s=26,
+        marker='^',
+        facecolors=SUBTYPE_MARKER,
+        edgecolors='white',
+        linewidths=0.6
+    ),
+    halo_lw=2.4,
+    legend=dict(
+        supgen_ms=5.6,
+        supgen_mew=1.4,
+        maingen_ms=6.6,
+        maingen_mew=0.6
+    ),
 )
