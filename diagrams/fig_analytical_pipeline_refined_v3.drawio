@@ -247,7 +247,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="s5_m2a" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#FAC775;strokeWidth=0.5;fontSize=9;fontColor=#633806;" value="Cascade-led in Frame A?" vertex="1">
-          <mxGeometry height="25" width="160" x="85" y="1175" as="geometry" />
+          <mxGeometry height="25" width="160" x="85" y="1202" as="geometry" />
         </mxCell>
         <mxCell id="s5_a3" edge="1" parent="1" source="s5_il" style="endArrow=classic;html=1;strokeColor=#888888;strokeWidth=0.8;" target="s5_m2a" value="">
           <mxGeometry relative="1" as="geometry" />
@@ -374,10 +374,10 @@
           <mxGeometry height="14" width="60" x="660" y="1349" as="geometry" />
         </mxCell>
         <mxCell id="note_final" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAF8;strokeColor=#AAAAAA;strokeWidth=0.5;" value="" vertex="1">
-          <mxGeometry height="60" width="810" x="10" y="1555" as="geometry" />
+          <mxGeometry height="60" width="810" x="10" y="1537" as="geometry" />
         </mxCell>
         <mxCell id="note_text" parent="1" style="text;html=1;fontSize=10;fontColor=#555555;align=center;" value="&lt;b&gt;Measurement and comparison are separated:&lt;/b&gt;&lt;div&gt;IMD 2010 constructs the fixed hierarchy;&amp;nbsp;&lt;/div&gt;&lt;div&gt;IMD 2019 and Yee–Dennett (2022) labels enter only at the comparative stage.&lt;/div&gt;" vertex="1">
-          <mxGeometry height="45" width="600" x="110" y="1559" as="geometry" />
+          <mxGeometry height="45" width="600" x="110" y="1541" as="geometry" />
         </mxCell>
         <mxCell id="s4e_in_m2" edge="1" parent="1" source="s4_in" style="endArrow=classic;html=1;strokeColor=#888888;strokeWidth=0.8;" target="s4_m2">
           <mxGeometry relative="1" as="geometry" />
