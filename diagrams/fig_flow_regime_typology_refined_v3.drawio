@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Claude">
   <diagram name="Flow-regime typology" id="flow-regimes">
-    <mxGraphModel dx="1006" dy="604" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1059" dy="636" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -234,19 +234,19 @@
           <mxGeometry height="16" width="80" x="600" y="560" as="geometry" />
         </mxCell>
         <mxCell id="leg_L" parent="1" style="html=1;fontSize=9;fontColor=#B05A3C;align=left;strokeColor=none;" value="L = less-deprived area" vertex="1">
-          <mxGeometry height="14" width="140" x="600" y="578" as="geometry" />
+          <mxGeometry height="14" width="140" x="600" y="585" as="geometry" />
         </mxCell>
         <mxCell id="leg_F" parent="1" style="html=1;fontSize=9;fontColor=#6D3F06;align=left;strokeColor=none;" value="F = focal MSOA" vertex="1">
-          <mxGeometry height="14" width="140" x="600" y="592" as="geometry" />
+          <mxGeometry height="14" width="140" x="600" y="599" as="geometry" />
         </mxCell>
         <mxCell id="leg_M" parent="1" style="html=1;fontSize=9;fontColor=#8B3F21;align=left;strokeColor=none;" value="M = more-deprived area" vertex="1">
-          <mxGeometry height="14" width="140" x="600" y="606" as="geometry" />
+          <mxGeometry height="14" width="140" x="600" y="613" as="geometry" />
         </mxCell>
         <mxCell id="leg_blue" parent="1" style="html=1;fontSize=9;fontColor=#185FA5;align=left;strokeColor=none;" value="— Counter direction" vertex="1">
-          <mxGeometry height="14" width="140" x="600" y="624" as="geometry" />
+          <mxGeometry height="14" width="140" x="600" y="631" as="geometry" />
         </mxCell>
         <mxCell id="leg_rust" parent="1" style="html=1;fontSize=9;fontColor=#993C1D;align=left;strokeColor=none;" value="— Cascade direction" vertex="1">
-          <mxGeometry height="14" width="140" x="600" y="638" as="geometry" />
+          <mxGeometry height="14" width="140" x="600" y="645" as="geometry" />
         </mxCell>
         <mxCell id="p25_note" parent="1" style="text;html=1;fontSize=8;fontColor=#888888;fontStyle=2;align=center;" value="P25 is recalculated within each reference frame." vertex="1">
           <mxGeometry height="18" width="250" x="95" y="570" as="geometry" />
