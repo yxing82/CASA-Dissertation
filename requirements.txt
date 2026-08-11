@@ -1,0 +1,27 @@
+# Core numerical and plotting stack
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+
+# Spatial processing and mapping
+geopandas
+shapely
+pyproj
+
+# Project/path and file-format support
+pyprojroot
+openpyxl
+xlrd
+
+# Notebook environment
+jupyter
+
+# Used by selected exploratory/final plotting or statistical notebooks
+plotly
+statsmodels
+
+# Note: package versions were not pinned during the original dissertation workflow.
+# This file records the required package set rather than an exact environment lock.
