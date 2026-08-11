@@ -20,9 +20,6 @@ The analysis notebooks expect a local `data/` directory at the repository root. 
 
 The exact acquisition/access route for a source may depend on the original provider and licensing or access conditions. In particular, source data that cannot appropriately be redistributed should be obtained through the same authorised route used for the dissertation rather than committed to this repository.
 
-## Derived compatibility file
-
-`msoa_cascade_national_frame_20260625.csv` is a **derived** file, not raw data. The canonical generated copy is retained under `outputs/`. A duplicate is also tracked here solely because the retained final case-locator notebook reads this historical path. It should not be treated as a source dataset.
 
 ## Generated data
 

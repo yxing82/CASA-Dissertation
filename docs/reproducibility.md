@@ -8,6 +8,7 @@ This document records the computational order of the cleaned submission branch. 
 2. Create a Python environment and install `requirements.txt`.
 3. Create/populate `data/` using the filenames listed in `data/README.md`.
 4. Keep the repository folder structure unchanged while running the notebooks. The retained notebooks use `pyprojroot.here()` to locate the project root and write/read intermediate files under `outputs/`.
+5. The submission notebooks are intentionally stored with execution counts and cell outputs cleared. Run them to regenerate numerical displays and figures locally.
 
 ## Recommended execution order
 
@@ -91,7 +92,7 @@ They are placed at repository root in the cleaned branch so that the retained no
 
 ## Tracked intermediate outputs
 
-Selected generated CSVs are intentionally tracked. This serves two purposes: it makes the interfaces between analytical stages visible, and it allows downstream notebooks to be inspected when restricted/raw source data cannot be redistributed. These derived files do not replace the raw-data preprocessing workflow: Stage 1 and the national-frame preprocessing notebook both read the raw Census O-D source files directly.
+Selected generated CSVs are intentionally tracked. This serves two purposes: it makes the interfaces between analytical stages visible, and it allows downstream notebooks to be inspected when restricted/raw source data cannot be redistributed. Generated result figures are not tracked in the submission tree; the figure-producing notebooks recreate them locally. These derived files do not replace the raw-data preprocessing workflow: Stage 1 and the national-frame preprocessing notebook both read the raw Census O-D source files directly.
 
 ## Historical filenames
 
