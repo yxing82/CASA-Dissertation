@@ -125,7 +125,7 @@ This repository is supporting reproducibility material. It is intended to show t
 
 ## Author
 
-Yujing Xing  
+Yujing (Olivia) Xing, supervised by Professor Adam Dennett
 MSc Urban Spatial Science  
 Centre for Advanced Spatial Analysis (CASA)  
 University College London
